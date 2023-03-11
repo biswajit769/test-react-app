@@ -1,23 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import Contact from "./Contact";
 
 function App() {
+  const [contacts, setContacts] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    axios("https://jsonplaceholder.typicode.com/users")
+      .then((response) => {
+        setError(null);
+        setContacts(response.data);
+      })
+      .catch(setError);
+
+    /* Using Fetch
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((response) => response.json())
+      .then((response) => {
+        setContacts(response);
+        setError(null);
+      })
+      .catch(setError);
+    */
+  }, []);
+
+  if (error) return <p>An error occurred</p>;
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {contacts.map(({ id, name, email, company }) => (
+        <Contact
+          key={id}
+          name={name}
+          email={email}
+          tagline={company.catchPhrase}
+        />
+      ))}
     </div>
   );
 }
