@@ -29,6 +29,7 @@ function App() {
 
   return (
     <div className="App">
+      <h1>User List</h1>
       {contacts.map(({ id, name, email, company }) => (
         <Contact
           key={id}
